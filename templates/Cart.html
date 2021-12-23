@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  
+<!DOCTYPE html>
+<html>
+<hhead>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>Matrix | Cart</title>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */ 
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 35%; /* IE10 */
+  flex: 35%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+.container {
+  background-color:rgb(243, 233, 233);
+  padding: 25px 25px 25px 25px;
+  width:100%;
+  align-self: center;
+  box-shadow: black;
+  border-radius: 5px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a { color: #1973bd; }
+
+a.del { color: rgba(255, 0, 0, 0.829); }
+
+hr {stroke-width:  10px solid black}
+
+span.price {
+  float: right;
+  color: darkblue;
+  font-weight: bold;
+}
+
+@media (max-width:50%) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+
+  }
+}
+</style>
+</head>
+<body>
+<br>
+<center>
+<h2 style="font-weight: bold; font-size: 46px; color: rgb(22, 161, 22);  text-transform: none">Review Cart</h2>
+</center>
+<br>
+  <div class="col-25">
+    <div class="container">
+      <h2 style="color: black; text-transform: none;"><b>Items in Cart</b><span class="price" style="color:black">
+        <i class="fa fa-shopping-cart"></i>&nbsp;<b>{{itc}}</b></span></h2>
+        
+        <hr color="maroon" style="height: 2px;">
+        {% for i in crt_items  %}
+        <p>
+            <a  class="del" href ="{% url 'del_Cart' i.prod.id %}"><i class="fa fa-trash" style="font-size: 17px; color: rgba(255, 0, 0, 0.829);"></i></a>
+            <h1><a href="{{i.prod.get_prod_url}}"></h1>
+              <img src="{{i.prod.image.url}}" alt="{{i.prod.name}}" style="width: 85px; height: 65px;">&nbsp;<b>{{i.prod.name}}</b>
+            </a>
+            <span class="price">₹ {{i.total}}<br>
+              <b style="color: darkslategray;">
+                <a href="{% url 'decr_Cart' i.prod.id %}"><i class="fa fa-minus-circle" style="font-size: 17px; color: rgba(255, 0, 0, 0.829);"></i></a> 
+                &nbsp; {{i.qty}} &nbsp;
+                <a href="{% url 'add_Cart' i.prod.id %}"><i class="fa fa-plus-circle" style="font-size: 17px; color: seagreen"></i></a><br>   
+                <a href="{% url 'buy_Cart' i.prod.id %}" class="btn btn-success" style="font-size: 15px; color: white; text-transform: none;">Buy Now</a><br>
+              </b>
+            </span> 
+        </p>
+          <b style="color: black;">Qty: {{i.qty}}<br> Unit Price: ₹ {{i.prod.price}}<br></b>
+          <hr>
+          {% endfor %}
+        <hr color="maroon" style="height: 2px;">
+        <b style="color: navy; font-size: x-large;">Total<span class="price">₹ {{c_tot}}</b></span>
+      </div>
+    </div>
+    {% for amsg in messages %}
+    <center><h3 style="color: rgb(163, 4, 36); text-transform: none;"><script>alert("{{amsg}}")</script></h3></center>
+    {% endfor %} 
+    
+    <br><br><br><br><br><br><br><br><br>
+</body>
+</html>
+{% endblock %}

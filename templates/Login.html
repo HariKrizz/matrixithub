@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Matrix | Login</title>
+</head>
+<body text="white" style="background-color: blueviolet;">
+    {% block content %}
+   <br><br>
+    <center>
+        <br>
+        <div class="container-fluid col-4">
+            <div class="row-cols-md-0 bg-gradient" >    
+                <form action="login" method="POST" class="p-lg-4 shadow-lg">
+                <h2 style="font-weight: bold; font-size: 40px; color: rgb(22, 161, 22); text-transform: none">Sign In</h2>
+                <hr>
+                {% csrf_token %}
+                <br>
+                <input type="text" name="Username" placeholder="Username" required>
+                <br>
+                <input type="password" name="Password" placeholder="Password" required>
+                <br>
+                <button class="btn btn-success" style="text-transform: none; width:170px; height: 35px; border-radius: 30px;">Sign in</button>
+                
+                <br>
+                </form>
+            <div>
+                <br>
+                <br>
+           
+        </div>
+    </center>
+    <br><br><br><br>
+    <div>      
+        {% for msgalert in messages  %}
+        <center><h3 style="color: rgb(163, 4, 36); text-transform: none;"><script>alert("{{msgalert}}")</script></h3></center>
+        {% endfor %} 
+    </div>
+ {% endblock %}
+</body>
+</html>
