@@ -23,23 +23,21 @@ def cart_details(request, total=0, count=0, crt_items=None):
 def crt_id(request):
     c_id = request.session.session_key
     if not c_id:
-        c_id = request.session.create
+        c_id = request.session.create()
     return c_id
 
 def user_session(request):
-    usr_sid = request.session.session_key
-    if not usr_sid:
-        usr_sid = request.session.create
+    usr_sid = request.session["_auth_user_id"]
     return usr_sid
 
 def add_Cart(request,prdct_id):
     product = Product.objects.get(id=prdct_id)
-    
+    user = User.objects.get(id=user_session(request))
     try:
-        crt_lst = cartList.objects.get(cart_id=crt_id(request),user_id=user_session(request))  
+        crt_lst = cartList.objects.get(cart_id=crt_id(request))  
 
     except cartList.DoesNotExist:
-        crt_lst = cartList.objects.create(cart_id=crt_id(request),user_id=user_session(request))
+        crt_lst = cartList.objects.create(cart_id=crt_id(request),user_id=user)
         crt_lst.save()
     
     try:
@@ -54,7 +52,8 @@ def add_Cart(request,prdct_id):
     return redirect('cart_details')
 
 def decr_Cart(request,prdct_id):
-    ct_item = cartList.objects.get(cart_id=crt_id(request),user_id=user_session(request))  
+    user = User.objects.get(id=user_session(request))
+    ct_item = cartList.objects.get(cart_id=crt_id(request),user_id=user)  
     prodct = get_object_or_404(Product,id=prdct_id)
     cart_items = cartItems.objects.get(prod=prodct,cart=ct_item)
 
@@ -66,15 +65,17 @@ def decr_Cart(request,prdct_id):
     return redirect('cart_details')
 
 def del_Cart(request,prdct_id):
-    ct_item = cartList.objects.get(cart_id=crt_id(request),user_id=user_session(request))   
+    user = User.objects.get(id=user_session(request))
+    ct_item = cartList.objects.get(cart_id=crt_id(request),user_id=user)   
     prodct = get_object_or_404(Product,id=prdct_id)
     cart_items = cartItems.objects.get(prod=prodct,cart=ct_item)
     cart_items.delete()
 
     return redirect('cart_details')
 
-def buy_Cart(request,prdct_id,tot=0): 
-    ct_item = cartList.objects.get(cart_id=crt_id(request),user_id=user_session(request))  
+def buy_Cart(request,prdct_id,tot=0):
+    user = User.objects.get(id=user_session(request))
+    ct_item = cartList.objects.get(cart_id=crt_id(request),user_id=user)  
     prodct = get_object_or_404(Product,id=prdct_id)
     cart_items = cartItems.objects.get(prod=prodct,cart=ct_item)
     tot += prodct.price * cart_items.qty
